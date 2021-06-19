@@ -85,7 +85,7 @@ function isValidRename (message, lobby) {
 	const searchCategory = message.guild.channels.find((category) => category.name.toLowerCase() === lobbyRename.toLowerCase() && category.type == 'category')
 
 	// lobbyRenameと同名の既存カテゴリーがある
-	if (findCategory) {
+	if (searchCategory) {
 		message.reply('既に同一名称のカテゴリーが存在します。');
 		return false;
 	}
