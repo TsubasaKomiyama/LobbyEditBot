@@ -1,28 +1,61 @@
 const discord = require('discord.js');
 const client = new discord.Client();
 const HandleCommand = require('絶対パス');
-const test = ;
-const test = ;
+const prefix = '/';
 
-// カテゴリー自動削除
-// メンバーがVCに接続・切断した時
+client.on ('ready', message => {
+	console.log('Bot on redy');
+	client.user.setPresence({ game: { name: 'LobbyEdit' } });
+});
+
+/**
+ * メンバーがVCに接続・切断した時にカテゴリーを削除する。
+ */
 client.on ('voiceStateUpdate', member => {
-  // 検索したいVCチャンネル名
-  const channelName = 'VCチャンネル名';
+  /**
+   * //TODO
+   * 接続人数0人のvoiceChannelを検索する。
+   * 見つかった場合、カテゴリごとチャンネルを削除する。
+   * 常設カテゴリにあるVCは削除しない。
+   */
 
-  // 指定秒数経過後に実行する処理
-  setTimeout(() => {
-    // チャンネル名がchannelNameかつVC接続人数が0人
-    let sizeCheck = client.channels.find((sizeCheck) => sizeCheck.name) === channelName &&
-                                          sizeCheck.members.size === 0);
+  /** 検索するVCチャンネル名 */
+  const voiceChannel = 'ゲーム用VC';
 
-    if (!(sizeCheck)) return; // 検索結果無し
+  // 5秒後に実行
+  setTimeout (() => {
+    // 接続人数0人のvoiceChannelを検索
+    let sizeCheckChannel = client.channels.find ((channel) => channel.name === voiceChannel && channel.members.size === 0);
 
-    const category = sizeCheck.parent; // 検索結果のチャンネルのカテゴリID取得
+    if (!(sizeCheckChannel)) return; // 検索結果無し
 
-    category.children.forEach((channel) => channel.delete()); // カテゴリに属するチャンネル削除
-    category.delete(); // カテゴリ削除
-  }, 5000) // 5000ミリ秒 = 5秒
-  .then (console.log('Deleted' + category))
+		const category = sizeCheckChannel.parent; // 検索結果チャンネルのカテゴリID取得
+		category.children.forEach ((channel) => channel.delete()); // カテゴリに属するチャンネル削除
+		category.delete(); // カテゴリ削除
+	}, 5000) // 5000ミリ秒
+  .then (console.log ('Deleted' + category))
   .catch (console.error);
-})
+});
+
+/**
+ * 特定のメッセージが投稿された時、HandleCommandを呼び出す。
+ * @param message
+ */
+client.on ('message', message => {
+	if (message.author.id == client.user.id || message.author.bot) return;
+
+	/**
+   * HandleCommandを呼び出して実行処理。
+   */
+	if (!message.content.startsWith(prefix)) return;
+	if (message.content.startsWith(prefix)) {
+		HandleCommand.call(message)
+	}
+});
+
+if (process.env.DISCORD_BOT_TOKEN == undefined) {
+	console.log('DISCORD_BOT_TOKENが設定されていません。');
+	process.exit(0);
+}
+
+client.login( process.env.DISCORD_BOT_TOKEN );
