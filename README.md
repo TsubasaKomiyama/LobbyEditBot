@@ -1,3 +1,3 @@
 # LobbyEditBot
-server.jsやpackage.jsonは既に用意されていることを想定しています。<br>
-discord.js v11を基にコーディングしています。v12対応予定はあります。
+ExtEOi様のDiscordBotBaseがベースとなっております。https://github.com/ExtEOi/DiscordBotBase.git<br>
+現在は、discord.js v12に対応するか検討しています。
